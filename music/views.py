@@ -24,6 +24,8 @@ class LoginView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get("username", "")
         password = request.data.get("password", "")
+        header = request.headers.get("Authorization", "")
+        print (username, password, header)
         user = authenticate(request, username=username, password=password)
         if user is not None:
             # login saves the user’s ID in the session,
@@ -42,6 +44,7 @@ class ListSongsView(generics.ListAPIView):
     """
     Provides a get method handler.
     """
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Songs.objects.all()
     serializer_class = SongsSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    
